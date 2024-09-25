@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Around the World in 80 pictures3</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 80vh;
+            width: 100%;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px auto;
+        }
+
+        .gallery img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.1);
+        }
+
+        #imagePreview {
+            max-width: 80%;
+            height: auto;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Photos by Tomisin Mafolabomi</h1>
+
+    <div id="map"></div>
+
+    <div class="gallery" id="gallery"></div>
+
+    <img id="imagePreview" src="" alt="Location Image">
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([51.505, -0.09], 13); // Coordinates to center the map
+
+        // Load and display map tiles from OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Function to handle marker click and display multiple images
+        function onMarkerClick(e) {
+            const images = e.target.options.images;  // Get images from marker options
+            const galleryDiv = document.getElementById('gallery');
+            galleryDiv.innerHTML = ''; // Clear previous gallery
+
+            images.forEach(image => {
+                const imgElement = document.createElement('img');
+                imgElement.src = image;
+                imgElement.addEventListener('click', function() {
+                    document.getElementById('imagePreview').src = image; // Set large preview image
+                });
+                galleryDiv.appendChild(imgElement);  // Add image to gallery
+            });
+        }
+
+        // Define locations with coordinates and multiple images
+        var locations = [
+            { coords: [51.5074, -0.1278], images: ['London1.jpg', 'London2.jpg', 'London3.jpg', 'London4.jpg', 'London5.jpg', 'London6.jpg'], name: 'London' }, 
+            { coords: [40.7128, -74.0060], images: ['NewYork1.jpg', 'NewYork2.jpg', 'NewYork3.jpg', 'NewYork4.jpg', 'NewYork5.jpg', 'NewYork6.jpg', 'NewYork7.jpg', 'NewYork8.jpg'], name: 'New York' },
+            { coords: [43.651070, -79.47015], images: ['Toronto1.jpg', 'Toronto2.jpg', 'Toronto3.jpg', 'Toronto4.jpg'], name: 'Toronto' },
+            { coords: [6.5244, 3.3792], images: ['Lagos1.jpg', 'Lagos2.jpg', 'Lagos3.jpg', 'Lagos4.jpg', 'Lagos5.jpg', 'Lagos6.jpg', 'Lagos7.jpg', 'Lagos8.jpg','Lagos9.jpg','Lagos10.jpg', 'Lagos11.jpg','Lagos12.jpg'], name: 'Lagos' },
+            { coords: [43.062, -79.0377], images: ['NiagraFalls1.jpg', 'NiagraFalls2.jpg', 'NiagraFalls3.jpg', 'NiagraFalls4.jpg', 'NiagraFalls5.jpg', 'NiagraFalls6.jpg', 'NiagraFalls7.jpg', 'NiagraFalls8.jpg'], name: 'Niagra Falls' },
+        ];
+
+        // Add markers with multiple images for each location
+        locations.forEach(function(location) {
+            var marker = L.marker(location.coords)
+                .addTo(map)
+                .bindPopup(location.name)
+                .on('click', onMarkerClick);
+
+            marker.options.images = location.images;  // Store array of images in marker options
+        });
+    </script>
+</body>
+</html>
